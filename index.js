@@ -2,11 +2,14 @@ import expresss from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';  
 import pool from './src/config/db.js';  
+import userRoutes from './src/routes/userRoutes.js';
+import errorHandler from './src/middleware/errorHandler.js';
 
 dotenv.config();
 const app = expresss();
 app.use(cors()); 
-
+app.use(expresss.json());
+app.use(errorHandler);
 //connecting dadtabase request
 app.get("/",async(req,res)=>{
     try{
@@ -16,6 +19,8 @@ app.get("/",async(req,res)=>{
         console.error(err.message);
     }
 })
+//routes conncetion
+app.use("/api",userRoutes);
 const port = process.env.PORT || 3000;
 app.listen(port,()=>{
     console.log(`server is running on port ${port}`);

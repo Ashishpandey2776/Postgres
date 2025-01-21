@@ -1,15 +1,14 @@
 import {createUserService,updateUserService,deleteUserService,getUserByIdService,getUserService} from "../models/userModels.js";
-export const createUser=async(req,res)=>{
+export const createUser=async(req,res,next)=>{
     const {name,email}=req.body;
     try {
+        if (!req.body.name) {
+      throw new Error("Name is required!");
+    }
         const newUser=await createUserService(name,email,next);
-        res.send("user created successfully:",newUser).json({
-            status:200,
-            message:"user created successfully",
-            data:newUser
-        });
+         res.status(201).json({ message: "User created successfully", newUser });
     } catch (err) {
-        next(err);
+       next(err);
     }
 };
  export const updateUser=async(req,res,next)=>{
@@ -17,10 +16,9 @@ export const createUser=async(req,res)=>{
     const {id}=req.params;
     try {
         const updatedUser=await updateUserService(name,email,id);
-        res.send("user updated successfully:",updatedUser).json({
-            status:200,
-            message:"user updated successfully",
-            data:updatedUser
+         res.status(200).json({ 
+            message:"user update successfully",
+            data:user
         });
     } catch (err) {
         next(err);
@@ -30,10 +28,9 @@ export const deleteUser=async(req,res,next)=>{
     try {
         const {id}=req.params;
         const deletedUser=await deleteUserService(id);
-        res.send("user deleted successfully:",deletedUser).json({
-            status:200,
-            message:"user deleted successfully",
-            data:deletedUser
+         res.status(200).json({ 
+            message:"user delete successfully",
+            deleteUser
         });
     } catch (error) {
         next(err);
@@ -44,10 +41,9 @@ export const getUserById=async(req,res,next)=>{
     const {id}=req.params;
     try {
         const user=await getUserByIdService(id);
-        res.send("user fetched successfully:",user).json({
-            status:200,
+        res.status(200).json({ 
             message:"user fetched successfully",
-            data:user
+            user
         });
     } catch (err) {
         next(err);
@@ -57,10 +53,9 @@ export const getUserById=async(req,res,next)=>{
 export const getAllUsers=async(req,res,next)=>{
     try {
         const users=await getUserService();
-        res.send("users fetched successfully:",users).json({
-            status:200,
+        res.status(200).json({
             message:"users fetched successfully",
-            data:users
+            users
         });
     } catch (err) {
         next(err);

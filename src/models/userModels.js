@@ -12,7 +12,7 @@ import pool from "../config/db.js";
 export const getUserByIdService=async(id)=>{
     try {
         const result = await pool.query("SELECT * FROM users where id=$1",[id]);
-        return result.rows;
+        return result.rows[0];
      } catch (error) {
         console.log("Server side Error detected",error);
         return error;
